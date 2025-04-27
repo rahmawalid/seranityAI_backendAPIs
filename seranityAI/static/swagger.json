@@ -1,0 +1,269 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Seranity AI API",
+      "description": "API for managing patients, sessions, and media uploads",
+      "version": "1.0"
+    },
+    "host": "127.0.0.1:5001",
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/get-user/{user_id}": {
+        "get": {
+          "summary": "Get a user by ID",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "The ID of the user to retrieve"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User retrieved successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/get-user-by-email": {
+        "post": {
+          "summary": "Get a user by email",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User retrieved successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/update-user/{user_id}": {
+        "put": {
+          "summary": "Update a user's information",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User updated successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/delete-user/{user_id}": {
+        "delete": {
+          "summary": "Delete a user",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User deleted successfully"
+            }
+          }
+        }
+      },
+      "/upload-audio/{user_id}/{session_id}": {
+        "post": {
+          "summary": "Upload an audio file for a session",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "session_id",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "name": "file",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "The .mp3 file to upload"
+            }
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "responses": {
+            "200": {
+              "description": "Audio uploaded successfully"
+            }
+          }
+        }
+      },
+      "/upload-video/{user_id}/{session_id}": {
+        "post": {
+          "summary": "Upload a video file for a session",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "session_id",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "name": "file",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "The .mp4 file to upload"
+            }
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "responses": {
+            "200": {
+              "description": "Video uploaded successfully"
+            }
+          }
+        }
+      },
+      "/upload-report/{user_id}/{session_id}": {
+        "post": {
+          "summary": "Upload a PDF report for a session",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "session_id",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "name": "file",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "The .pdf file to upload"
+            }
+          ],
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "responses": {
+            "200": {
+              "description": "PDF report uploaded successfully"
+            }
+          }
+        }
+      },
+      "/stream-audio/{file_id}": {
+        "get": {
+          "summary": "Stream an audio file by file ID",
+          "parameters": [
+            {
+              "name": "file_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Audio file streamed successfully"
+            }
+          }
+        }
+      },
+      "/stream-video/{file_id}": {
+        "get": {
+          "summary": "Stream a video file by file ID",
+          "parameters": [
+            {
+              "name": "file_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Video file streamed successfully"
+            }
+          }
+        }
+      },
+      "/view-report/{file_id}": {
+        "get": {
+          "summary": "View a PDF report by file ID",
+          "parameters": [
+            {
+              "name": "file_id",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "PDF file streamed successfully"
+            }
+          }
+        }
+      }
+    }
+  }
+  
