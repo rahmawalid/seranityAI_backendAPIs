@@ -5,6 +5,7 @@ from mongoengine import connect  # ✅ Import connect here
 from config import Config
 from controller.patientController import patient_blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS
 
 from controller.doctorController import doctor_blueprint
 
@@ -13,11 +14,12 @@ from controller.doctorController import doctor_blueprint
 # ------------------
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)
 
 # ------------------
 # MongoDB Connection
 # ------------------
-connect(**app.config["MONGODB_SETTINGS"])  
+connect(**app.config["MONGODB_SETTINGS"])
 # ------------------
 # Swagger UI Setup
 # ------------------
@@ -25,9 +27,7 @@ SWAGGER_URL = "/patientAPI/docs"
 API_URL = "/static/swagger.json"
 
 swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={"app_name": "Patient Management API"}
+    SWAGGER_URL, API_URL, config={"app_name": "Patient Management API"}
 )
 
 # ------------------
@@ -48,5 +48,3 @@ api = Api(app)
 # ------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True, use_reloader=False)
-
-
