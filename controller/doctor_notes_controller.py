@@ -610,17 +610,17 @@ def generate_enhanced_report(patient_id, session_id):
         # Check if session has doctor notes
         enhancement_readiness = doctor_notes_service.check_session_enhancement_readiness(patient_id, session_id)
         if not enhancement_readiness["ready_for_enhancement"]:
-            return jsonify({
+            return {
                 "success": False,
                 "error": "Session does not have doctor notes for enhanced analysis",
                 "recommendation": "Upload doctor notes first to enable enhanced analysis"
-            }), 400
+            }, 400
         
         # Generate the enhanced report using the service
         result = doctor_notes_service.generate_enhanced_report_with_images(patient_id, session_id)
-        
+        print("here after reportttttttt")
         if result["success"]:
-            return jsonify({
+            return {
                 "success": True,
                 "message": "Enhanced report with doctor notes generated successfully",
                 "data": {
@@ -638,13 +638,13 @@ def generate_enhanced_report(patient_id, session_id):
                         "mismatch_analysis": "comprehensive" in result["analysis_type"]
                     }
                 }
-            }), 200
+            }, 200
         else:
-            return jsonify({
+            return {
                 "success": False,
                 "error": "Failed to generate enhanced report",
                 "details": result.get("error", "Unknown error")
-            }), 400
+            }, 400
         
     except Exception as e:
         print(f"❌ Error generating enhanced report: {str(e)}")

@@ -37,13 +37,12 @@ class EnhancedClinicalPDF(FPDF):
     def safe_cell(self, w, h, txt, ln=0, align='L'):
         """Safe cell output with error handling"""
         try:
-            # Clean the text
             clean_txt = str(txt).encode('latin-1', errors='ignore').decode('latin-1')
-            self.cell(w, h, clean_txt, ln, align)
+            self.cell(w=w, h=h, txt=clean_txt, ln=ln, align=align)
         except Exception as e:
-            # Fallback to simplified text
             safe_txt = str(txt)[:100] + "..." if len(str(txt)) > 100 else str(txt)
-            self.cell(w, h, safe_txt, ln, align)
+            self.cell(w=w, h=h, txt=safe_txt, ln=ln, align=align)
+
     
     def safe_multi_cell(self, w, h, txt):
         """Safe multi-cell output with error handling"""
@@ -648,7 +647,7 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
             # Generate the appropriate enhanced report
             if analysis_type == "comprehensive_with_notes":
                 return self._generate_comprehensive_enhanced_report(
-                    patient_info, session_info, target_session, notes_files, capabilities
+                    patient_info, session_info, notes_files, capabilities
                 )
             elif analysis_type == "speech_with_notes":
                 return self._generate_tov_enhanced_report(
@@ -1051,6 +1050,9 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
             
             # Patient Information Section
             print("hereeeeee")
+            print("🤖 patient_info:", type(patient_info), patient_info)
+            print("🤖 session_info:", type(session_info), session_info)
+            print("🤖 therapist_clinical_data:", type(therapist_clinical_data))
             self._add_patient_info_to_pdf(pdf, patient_info, session_info)
             print("passed")
             # Clinical Analysis Section
@@ -1058,9 +1060,9 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
             print("doctor notes")
             # Doctor Notes Section with Images
             self._add_doctor_notes_with_images_to_pdf(pdf, valid_notes)
-            
+            print("done notes")
             # Save PDF to GridFS
-            pdf_bytes = pdf.output(dest="S").encode("utf-8")
+            pdf_bytes = pdf.output(dest="S").encode("latin1")
             pdf_stream = io.BytesIO(pdf_bytes)
             
             pdf_file_id = fs.put(
@@ -1068,6 +1070,9 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
                 filename=f"enhanced_{report_title.lower().replace(' ', '_')}.pdf",
                 contentType="application/pdf",
             )
+
+            print(f"🤖 pdf_file_id type: {type(pdf_file_id)}, value: {pdf_file_id}")
+
             
             return pdf_file_id
             
@@ -1133,7 +1138,7 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
         pdf.set_font("DejaVuSans", size=12)
 
         
-        
+        print("im here")
         patient_details = [
     f"Patient ID: {patient_info['Patient ID']}",
     f"Name: {patient_info['Full Name']}",
@@ -1145,9 +1150,11 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
     f"Session Date: {session_info['Date of Session']}",
     f"Duration: {session_info['Duration']} minutes"
 ]
+        print("pass")
 
 
         for detail in patient_details:
+            print(detail)
             pdf.safe_cell(0, 8, detail, ln=True)
         pdf.ln(10)
     
@@ -1813,12 +1820,13 @@ Read this therapist note and provide a clinically intelligent interpretation. DO
                 
                 try:
                     result = self.generate_enhanced_report_with_images(patient_id, session_id)
+                    print("heree after report")
                     results.append({
                         "patient_id": patient_id,
                         "session_id": session_id,
                         "success": result["success"],
-                        "report_id": result.get("report_id", ""),
-                        "analysis_type": result.get("analysis_type", ""),
+                        "report_id": result["report_id"],
+                        "analysis_type": result["analysis_type"],
                         "error": result.get("error", "")
                     })
                     

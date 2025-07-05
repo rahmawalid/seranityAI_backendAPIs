@@ -1038,22 +1038,24 @@ def generate_report_with_doctor_notes(patient_id, session_id):
         logger.info(f"Generating enhanced report with doctor notes for patient {patient_id}, session {session_id}")
         
         # Use doctor notes service for enhanced analysis
-        result = generate_enhanced_report(patient_id, session_id)
-        
+        result, status_code = generate_enhanced_report(patient_id, session_id)
+        print("report generation")
+        print(result)
+        print(result)
+
         if not result["success"]:
             raise ValueError(result.get("error", "Failed to generate enhanced report"))
         
-        logger.info(f"Enhanced report with doctor notes generated: {result['report_id']}")
         return jsonify({
             "message": "Enhanced report with doctor notes generated successfully",
             "success": True,
-            "report_id": result["report_id"],
+            "report_id": result["data"]["report_id"],
             "patient_id": patient_id,
             "session_id": session_id,
-            "analysis_type": result.get("analysis_type", "enhanced"),
-            "doctor_notes_count": result.get("doctor_notes_count", 0),
-            "prompt_used": result.get("prompt_used", "enhanced_with_notes"),
-            "images_included": result.get("images_included", False)
+            "analysis_type": result["data"]["analysis_type"],
+            "doctor_notes_count": result["data"]["doctor_notes_count"],
+            "prompt_used": result["data"]["prompt_used"],
+            "images_included": result["data"]["images_included"]
         }), 200
         
     except Exception as e:
