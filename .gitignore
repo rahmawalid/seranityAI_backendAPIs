@@ -1,3 +1,8 @@
 .env
 .gitattributes
-output
+
+# Ignore all contents of the output folder
+output/
+
+# Explicitly ignore this model file
+best_random_forest_model.pkl
